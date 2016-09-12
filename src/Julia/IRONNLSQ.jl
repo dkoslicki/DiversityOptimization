@@ -8,13 +8,13 @@
 include("lsqnonneg.jl")
 
 function IRONNLSQ(Aaux,s,q,nIter,myeps,I)
-	q = 1/100;  # diversity index
-	nIter = 3;  # Number of iterations to do for
-	myeps = 0.00001;  # reweighting epsilon?!
-	I = eye(N);
+#	q = 1/100;  # diversity index
+#	nIter = 3;  # Number of iterations to do for
+#	myeps = 0.00001;  # reweighting epsilon?!
+#	I = eye(N);
 	A = Aaux[setdiff(1:end, 1), :];  # delete first row of 1's
 	N = size(A,2);  # Number of columns
-	weightI = ones(1,N);  # Z=I
+	weightI = ones(1,N);  # initial weights are 1
 	for n=1:nIter
 		Atilde = [weightI; lambda*A];  # Stick the weights back in
 		xI = lsqnonneg(Atilde,s);

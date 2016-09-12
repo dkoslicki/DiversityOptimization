@@ -44,6 +44,18 @@ function parse_commandline()
 		"--clustering_type", "-c"
 			help = "Clustering type: Deterministic (slow), Random (fast). Default is Random"
 			default = "Random"
+		"--diversity_index", "-q"
+			help = "Diversity index q. Default = 1/100"
+			default = 1/100
+		"--nIter", "-N"
+			help = "Number of reweighting iterates to do. Default = 3"
+			default = 3
+		"--myeps", "-m"
+			help = "epsilon to use to fiddle with reweighting. Default = 0.00001"
+			default = 0.00001
+		"--Zmatrix", "-Z"
+			help = "What kind of matrix to use for diversity. Options: identity, gram (will add later), (later will add ability to do custom matrix)"
+			default = "identity"
 			
     end
     return parse_args(s)
@@ -59,8 +71,19 @@ kmer_counts_per_sequence_path = parsed_args["kmer_counts_per_sequence_path"]
 training_database = parsed_args["training_database"]
 number_of_clusters = int(parsed_args["number_of_clusters"])
 clustering_type = parsed_args["clustering_type"]
+diversity_index = float(parsed_args["diversity_index"])
+nIter = int(parsed_args["nIter"])
+myeps = float(parsed_args["myeps"])
+Zmatrix = parsed_args["Zmatrix"]
 
 k=6;
+
+## Other fixed constants
+#	q = 1/100;  # diversity index
+#	nIter = 3;  # Number of iterations to do for
+#	myeps = 0.00001;  # reweighting epsilon?!
+#	I = eye(N);
+
 #Form the 6mer counts
 #Takes too long to do this step. The count code finishes quickly, but for some reason it takes Julia a long time to read it in...
 #So just write to file, and then read it in using readdlm()
@@ -96,6 +119,10 @@ counts_per_sequence=convert(Array{Float64,2},counts_per_sequence);
 if training_database == "Quikr" #Using the quikr database
 	#Read in the training database
 	A = h5read("../../data/trainset7_112011N6C.h5","/data");
+	if Zmatrix == "identity"
+		I = eye(size(A,2))
+	end
+
 
 	#Form the Aaux
 	Aaux = [ones(1,size(A,2)); lambda*A];
@@ -113,7 +140,7 @@ if training_database == "Quikr" #Using the quikr database
 	    #Perform Quikr on each cluster
     	for i=1:NoOfClusters_Quikr
         	s = [0; lambda*Mu_ARK_Quikr[:,i]];
-	        tmp_ARK_Quikr = IRONNLSQ(Aaux, s)';
+	        tmp_ARK_Quikr = IRONNLSQ(Aaux, s,q,nIter,myeps,I)';
 			result_ARK_Quikr = result_ARK_Quikr + ClusterProbability[i]*tmp_ARK_Quikr; # This is the linear additive composition estimation
 		end
     
@@ -146,7 +173,7 @@ if training_database == "Quikr" #Using the quikr database
 		    #Perform Quikr on each cluster
     		for i=1:NoOfClusters_Quikr
 	        	s = [0; lambda*Mu_ARK_Quikr[:,i]]; 
-	        	tmp_ARK_Quikr = IRONNLSQ(Aaux, s)';
+	        	tmp_ARK_Quikr = IRONNLSQ(Aaux, s,q,nIter,myeps,I)';
     		    result_ARK_Quikr = result_ARK_Quikr + ClusterProbability[i]*tmp_ARK_Quikr; # This is the linear additive composition estimation
 	    	end
 	    	
@@ -172,7 +199,10 @@ elseif training_database == "SEK" #using the split Quikr database (known as the 
 
 	#Read in the training database
 	A = h5read("../../data/trainset7_112011_allseqslongerthan700-SEKTrainingMatrix-bitShift100-windowLength400-N6C.h5","/data");
-	
+	if Zmatrix == "identity"
+		I = eye(size(A,2))
+	end
+
 	#Form the Aaux
 	Aaux = [ones(1,size(A,2)); lambda*A];
 	
@@ -191,7 +221,7 @@ elseif training_database == "SEK" #using the split Quikr database (known as the 
 		#Perform Quikr on each cluster
 		for i=1:NoOfClusters_Quikr
 			s = [0; lambda*Mu_ARK_Quikr[:,i]];
-			tmp = IRONNLSQ(Aaux, s);
+			tmp = IRONNLSQ(Aaux, s,q,nIter,myeps,I);
 			tmp_ARK_Quikr = blockMatrix * tmp;
 			tmp_ARK_Quikr = tmp_ARK_Quikr';
 			result_ARK_Quikr = result_ARK_Quikr + ClusterProbability[i]*tmp_ARK_Quikr;
@@ -226,7 +256,7 @@ elseif training_database == "SEK" #using the split Quikr database (known as the 
 		    #Perform Quikr on each cluster
     		for i=1:NoOfClusters_Quikr
 	        	s = [0; lambda*Mu_ARK_Quikr[:,i]]; 
-		        tmp = IRONNLSQ(Aaux, s);
+		        tmp = IRONNLSQ(Aaux, s,q,nIter,myeps,I);
 		        tmp_ARK_Quikr = blockMatrix * tmp;
        			tmp_ARK_Quikr = tmp_ARK_Quikr';
 	        	result_ARK_Quikr = result_ARK_Quikr + ClusterProbability[i]*tmp_ARK_Quikr;
