@@ -16,6 +16,7 @@ include("LBG2.jl")
 include("pdist.jl")
 include("ConvertToCAMIOutput.jl")
 include("kmeans2.jl")
+include("IRONNLSQ.jl")
 
 
 
