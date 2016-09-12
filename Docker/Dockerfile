@@ -40,6 +40,6 @@ Run wget ftp://selab.janelia.org/pub/software/hmmer3/3.1b2/hmmer-3.1b2.tar.gz &&
  make install
 
 #Create tasks
-RUN cp /CAMIARKQuikr/Docker/default /dckr/etc/tasks.d/default
+RUN cp /DiversityOptimization/Docker/default /dckr/etc/tasks.d/default
 
 #echo -e "\n \n NOTE: Be sure to download the training data at http://www.math.oregonstate.edu/~koslickd/CommonKmersData.tar.gz and uncompress it. The resulting directory should be passed to docker at the location CONT_DATABASES_DIR via: -v /path/to/uncompressed/Data:/dckr/mnt/camiref/CommonKmersData:ro"
