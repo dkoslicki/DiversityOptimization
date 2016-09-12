@@ -31,8 +31,8 @@ RUN git clone https://github.com/EESI/dna-utils.git && \
 #Install gzip
 RUN apt-get install -y gzip
 
-#Install HMMER3
-Run wget ftp://selab.janelia.org/pub/software/hmmer3/3.1b2/hmmer-3.1b2.tar.gz && \
+#Install HMMER3 ftp://selab.janelia.org/pub/software/hmmer3/3.1b2/hmmer-3.1b2.tar.gz
+RUN wget http://eddylab.org/software/hmmer3/3.1b2/hmmer-3.1b2.tar.gz && \
  tar xf hmmer-3.1b2.tar.gz && \
  cd hmmer-3.1b2 && \
  ./configure && \
