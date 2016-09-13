@@ -76,6 +76,11 @@ nIter = int(parsed_args["nIter"])
 myeps = float(parsed_args["myeps"])
 Zmatrix = parsed_args["Zmatrix"]
 
+q = diversity_index
+nIter = nIter
+myeps = myeps
+
+
 k=6;
 
 ## Other fixed constants
@@ -120,7 +125,7 @@ if training_database == "Quikr" #Using the quikr database
 	#Read in the training database
 	A = h5read("../../data/trainset7_112011N6C.h5","/data");
 	if Zmatrix == "identity"
-		I = eye(size(A,2))
+		I = eye(size(A,2));
 	end
 
 
@@ -200,7 +205,7 @@ elseif training_database == "SEK" #using the split Quikr database (known as the 
 	#Read in the training database
 	A = h5read("../../data/trainset7_112011_allseqslongerthan700-SEKTrainingMatrix-bitShift100-windowLength400-N6C.h5","/data");
 	if Zmatrix == "identity"
-		I = eye(size(A,2))
+		I = eye(size(A,2));
 	end
 
 	#Form the Aaux
