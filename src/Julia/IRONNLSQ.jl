@@ -20,12 +20,14 @@ function IRONNLSQ(Aaux,s,q,nIter,myeps,I)
 #	A = Aaux[setdiff(1:end, 1), :];  # delete first row of 1's
 	N = size(A,2);  # Number of columns
 	weightI = ones(1,N);  # initial weights are 1
-	for n=1:2
+	for dummy=1:2
 		#Atilde = [weightI; lambda*A];  # Stick the weights back in
 		Aaux[1,:] = weightI;
 		#xI = lsqnonneg(Atilde,s);
 		x = lsqnonneg(Aaux,s);
 		weightI = (I*x+myeps)'.^(q-1);  # Do the reweighting
+		print("loop")
 	end
+	print("out loop")
 	return x
 end
