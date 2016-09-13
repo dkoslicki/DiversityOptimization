@@ -24,8 +24,8 @@ function IRONNLSQ(Aaux,s,q,nIter,myeps,I)
 		#Atilde = [weightI; lambda*A];  # Stick the weights back in
 		Aaux[1,:] = weightI;
 		#xI = lsqnonneg(Atilde,s);
-		xI = lsqnonneg(Aaux,s);
-		weightI = (I*xI+myeps)'.^(q-1);  # Do the reweighting
+		x = lsqnonneg(Aaux,s);
+		weightI = (I*x+myeps)'.^(q-1);  # Do the reweighting
 	end
-	return xI
+	return x
 end
