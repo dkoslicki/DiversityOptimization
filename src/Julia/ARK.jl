@@ -49,7 +49,7 @@ function parse_commandline()
 			default = 1/100
 		"--nIter", "-N"
 			help = "Number of reweighting iterates to do. Default = 3"
-			default = 1
+			default = 3
 		"--myeps", "-m"
 			help = "epsilon to use to fiddle with reweighting. Default = 0.00001"
 			default = 0.00001

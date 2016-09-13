@@ -21,7 +21,7 @@ function IRONNLSQ(Aaux,s,q,nIter,myeps,I)
 	N = size(A,2);  # Number of columns
 	weightI = ones(1,N);  # initial weights are 1
 	x = zeros(N);
-	for dummy=1:2
+	for dummy=1:nIter
 		#Atilde = [weightI; lambda*A];  # Stick the weights back in
 		Aaux[1,:] = weightI;
 		#xI = lsqnonneg(Atilde,s);
