@@ -27,9 +27,9 @@ function IRONNLSQ(Aaux,s,q,nIter,myeps,I)
 		#xI = lsqnonneg(Atilde,s);
 		x = lsqnonneg(Aaux,s);
 		weightI = (I*x+myeps)'.^(q-1);  # Do the reweighting
-		print("inner loop\n")
-		print("$(sum(x))\n")
+		#print("inner loop\n")
+		#print("$(sum(x))\n")
 	end
-	print("out loop\n")
+	#print("out loop\n")
 	return x
 end
