@@ -20,6 +20,7 @@ function IRONNLSQ(Aaux,s,q,nIter,myeps,I)
 #	A = Aaux[setdiff(1:end, 1), :];  # delete first row of 1's
 	N = size(A,2);  # Number of columns
 	weightI = ones(1,N);  # initial weights are 1
+	x = zeros(N);
 	for dummy=1:2
 		#Atilde = [weightI; lambda*A];  # Stick the weights back in
 		Aaux[1,:] = weightI;
